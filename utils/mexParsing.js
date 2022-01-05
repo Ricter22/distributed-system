@@ -1,14 +1,14 @@
 countries = ['brasil', 'italy', 'spain', 'germany', 'france', 'netherlands', 'uk', 'sweden'];
 
-function Parsing(text){
+function Parsing(text) {
     let list = [];
     let msg = '';
     words = text.split('@');
-    words.forEach(word =>{
+    words.forEach(word => {
         msg += word;
     })
     words.forEach(word => {
-        if (countries.includes(word.toLowerCase())){
+        if (countries.includes(word.toLowerCase())) {
             list.push('https://en.wikipedia.org/wiki/' + word);
         }
     })
@@ -17,6 +17,6 @@ function Parsing(text){
 
 
 module.exports = {
-    Parsing : Parsing
+    Parsing: Parsing
 }
 
