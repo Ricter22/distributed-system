@@ -1,2 +1,3 @@
 node_modules
 gif_service/venv
+gif_service/__pycache__
