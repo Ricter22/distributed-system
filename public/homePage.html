@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melo Chat Server</title>
+    <link rel="icon" href="/images/chaticon.ico">
+    <link rel="stylesheet" href="/css/homePageStyle.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+
+    <!--<link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">-->
+</head>
+
+<body>
+    <div class="row">
+
+        <!-- Left side -->
+        <div class="column" id="left">
+            <div id="contenedor">    
+                <h1 style="color: white;" class='title'>MELO CHAT</h1>
+            </div>
+            <button type="button" id="exit-btn" onclick=window.location.href="login.html">Exit 🚪</button> 
+            <img src="/images/chaticon.ico" style="width: 30px; height: 30px;"/> 
+            <!-- Users section -->
+            <h3 style="color: white;" class='title'>Users Online:</h3>
+            <div class=usersSection id="usersAvalaible"></div>
+            
+            <!-- Rooms section -->
+            <h3 style="color: white;" class='title'>Rooms avalaible:</h3>
+            <div class = "roomsSection" id="roomsAvalaible">
+
+                    <button class="roomsBtn" id="room 1">Room 1</button><br>
+                    <button class="roomsBtn" id="room 2">Room 2</button><br>
+                    <button class="roomsBtn" id="room 3">Room 3</button><br>
+                    <button class="roomsBtn" id="room 4">Room 4</button><br>
+                    <button class="roomsBtn" id="room">Global</button>
+
+            </div>
+        </div>
+
+        <div class="column" id="right">
+            <div id="top-right">  
+                <h1 style="color: white" class='title'>Messages:</H1>  
+            </div>  
+            <div class="messages"></div>
+
+            <div class="inputContainer">
+                <form id="chatForm">
+                    <!-- Input bar -->
+                    <input type="text" required placeholder="Type here..." id="inputMsg">
+                    <input type="submit" value="💬" class="inputButton">
+                    <input type="file" id="multimedia" value="Media">
+                </form>
+            </div>
+        </div>
+      </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
