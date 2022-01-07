@@ -53,3 +53,16 @@ def send_menu(page):
     menu_list = get_images_of_page(page)
     print(menu_list)
     return jsonify(menu_list)
+
+@app.route('/media/<name>')
+def send_gif(name):
+    """
+    Returns the requested image directly through send_file
+    """
+    return send_file("./media/" + name, mimetype='image/gif')
+
+@app.after_request
+def after_request(response):
+    header = response.headers
+    header['Access-Control-Allow-Origin'] = '*'
+    return response
