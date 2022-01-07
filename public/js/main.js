@@ -207,6 +207,19 @@ function displayFiles(bin) {
     document.querySelector('.messages').appendChild(div);
 }
 
+function showMenuGIF() {
+    console.log("Calling the show menu thing")
+    var x = document.getElementById("GIFmenu");
+    console.log(x)
+    if (x.style.display === "none") {
+        console.log("showing")
+        x.style.display = "block";
+    } else {
+        console.log("not showing")
+        x.style.display = "none";
+    }
+}
+
 multimedia.addEventListener('change', (e) => {
     const file = multimedia.files[0];
 
