@@ -6,6 +6,9 @@ const usersOnline = document.getElementById('usersAvalaible');
 const roomsOnline = document.getElementById('roomsAvalaible');
 const multimedia = document.getElementById('multimedia');
 
+let gifPage = 0
+let maxNumPage = null
+
 const socket = io({
     'reconnection': true,
     'reconnectionDelay': 1000,
@@ -208,17 +211,14 @@ function displayFiles(bin) {
 }
 
 async function showMenuGIF() {
-    console.log("Calling the show menu thing")
     var x = document.getElementById("GIFmenu");
 
-    console.log(x)
     if (x.style.display === "none") {
-        console.log("showing")
         x.style.display = "block";
 
         getMenuInformation()
         // console.log(menuImages)
-        
+
         // menuImages.then(() => {
         //     for (const gif_name of menuImages) {
         //         console.log(gif);
@@ -234,14 +234,12 @@ async function showMenuGIF() {
         // });
 
     } else {
-        console.log("not showing")
         x.style.display = "none";
     }
 }
 
 async function getMenuInformation() {
-    let base = new URL(1, "http://0.0.0.0:5000/menu/")
-    console.log(base)
+    let base = new URL(gifPage, "http://0.0.0.0:5000/menu/")
     fetch(base)
         .then(
             function (response) {
@@ -253,11 +251,26 @@ async function getMenuInformation() {
 
                 // Examine the text in the response
                 response.json().then(function (data) {
-                    console.log(data);
+                    var gifDivRow = document.getElementById("GIFrow");
+                    // remove all the children
+                    gifDivRow.textContent = '';
                     for (const gif_name of data) {
                         console.log(gif_name);
                         let gif_url = new URL(gif_name, "http://0.0.0.0:5000/media/")
                         addGIFcard(gif_url)
+                    }
+
+                    // if we reach empty page then there is nothing more to show
+                    if (data.length == 0) {
+                        console.log("PO ES CERO")
+                        maxNumPage = gifPage
+                        console.log(maxNumPage)
+                        var btnNext = document.getElementById("btnNext");
+                        if (gifPage == maxNumPage) {
+                            btnNext.style.display = "none";
+                        } else {
+                            btnNext.style.display = "block";
+                        }
                     }
                     return data
                 });
@@ -271,7 +284,6 @@ async function getMenuInformation() {
 
 function addGIFcard(url) {
     var gifDivRow = document.getElementById("GIFrow");
-    
     var gifDivCol = document.createElement('div');
     var gifDivCard = document.createElement('div');
     var gifImg = document.createElement('img');
@@ -281,14 +293,38 @@ function addGIFcard(url) {
     gifImg.className = 'card-img-top'
 
     gifDivCard.style = "width: 10rem;"
-    
+
     gifImg.src = url
 
-    console.log("Creating one with url " + url)
+    // console.log("Creating one with url " + url)
 
     gifDivRow.appendChild(gifDivCol);
     gifDivCol.appendChild(gifDivCard);
     gifDivCard.appendChild(gifImg);
+}
+
+function prevPage() {
+    var btn = document.getElementById("btnPrev");
+
+    gifPage -= 1
+
+    getMenuInformation()
+
+    if (gifPage == 0) {
+        btn.style.display = "none";
+    } else {
+        btn.style.display = "block";
+    }
+}
+
+function nextPage() {
+    var btnPrev = document.getElementById("btnPrev");
+
+    gifPage += 1
+
+    btnPrev.style.display = "block";
+
+    getMenuInformation()
 }
 
 multimedia.addEventListener('change', (e) => {
