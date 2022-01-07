@@ -207,17 +207,88 @@ function displayFiles(bin) {
     document.querySelector('.messages').appendChild(div);
 }
 
-function showMenuGIF() {
+async function showMenuGIF() {
     console.log("Calling the show menu thing")
     var x = document.getElementById("GIFmenu");
+
     console.log(x)
     if (x.style.display === "none") {
         console.log("showing")
         x.style.display = "block";
+
+        getMenuInformation()
+        // console.log(menuImages)
+        
+        // menuImages.then(() => {
+        //     for (const gif_name of menuImages) {
+        //         console.log(gif);
+        //         addGIFcard(gif_name)
+        //     }
+        // })
+
+        // getMenuInformation().then(menuImages => {
+        //     for (const gif_name of menuImages) {
+        //         console.log(gif);
+        //         addGIFcard(gif_name)
+        //     }
+        // });
+
     } else {
         console.log("not showing")
         x.style.display = "none";
     }
+}
+
+async function getMenuInformation() {
+    let base = new URL(1, "http://0.0.0.0:5000/menu/")
+    console.log(base)
+    fetch(base)
+        .then(
+            function (response) {
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                        response.status);
+                    return [];
+                }
+
+                // Examine the text in the response
+                response.json().then(function (data) {
+                    console.log(data);
+                    for (const gif_name of data) {
+                        console.log(gif_name);
+                        let gif_url = new URL(gif_name, "http://0.0.0.0:5000/media/")
+                        addGIFcard(gif_url)
+                    }
+                    return data
+                });
+            }
+        )
+        .catch(function (err) {
+            console.log('Fetch Error :-S', err);
+            return []
+        });
+}
+
+function addGIFcard(url) {
+    var gifDivRow = document.getElementById("GIFrow");
+    
+    var gifDivCol = document.createElement('div');
+    var gifDivCard = document.createElement('div');
+    var gifImg = document.createElement('img');
+
+    gifDivCol.className = 'col-auto mb-3';
+    gifDivCard.className = 'card'
+    gifImg.className = 'card-img-top'
+
+    gifDivCard.style = "width: 10rem;"
+    
+    gifImg.src = url
+
+    console.log("Creating one with url " + url)
+
+    gifDivRow.appendChild(gifDivCol);
+    gifDivCol.appendChild(gifDivCard);
+    gifDivCard.appendChild(gifImg);
 }
 
 multimedia.addEventListener('change', (e) => {
