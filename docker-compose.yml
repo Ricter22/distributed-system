@@ -7,6 +7,13 @@ services:
       - 3000:3000
     networks:
       - chat
+
+  gif-service:
+    build: gif_service/
+    ports:
+      - 5000:5000
+    networks:
+      - chat
     
   mongo:
     image: mongo
