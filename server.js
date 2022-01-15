@@ -285,15 +285,24 @@ io.on('connection', socket => { //socket is a parameter
     socket.on('chatMessage', msg => {
         msg.time = moment().format('h:mm a');
 
-        //Parsing the message
-        msg.countries = Parsing(msg.text)[0];
-        msg.text = Parsing(msg.text)[1];
-
         //qui voglio salvare il messaggio nel database
-        const msgSavedInDb = new messagesFromDb({ username: msg.username, text: msg.text, time: msg.time, room: user.room, countries: msg.countries });
-        msgSavedInDb.save().then(() => {
-            io.to(user.room).emit('message', msg);
-        })
+        // TODO handle media
+        console.log(msg)
+        if ("media" in msg) {
+            console.log("Media thing")
+            const msgSavedInDb = new messagesFromDb({ username: msg.username, media: msg.media, time: msg.time, room: user.room});
+            msgSavedInDb.save().then(() => {
+                io.to(user.room).emit('message', msg);
+            })
+        } else {
+            //Parsing the message
+            msg.countries = Parsing(msg.text)[0];
+            msg.text = Parsing(msg.text)[1];
+            const msgSavedInDb = new messagesFromDb({ username: msg.username, text: msg.text, time: msg.time, room: user.room, countries: msg.countries });
+            msgSavedInDb.save().then(() => {
+                io.to(user.room).emit('message', msg);
+            })
+        }
     })
 
     //Runs when client disconnect

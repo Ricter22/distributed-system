@@ -54,7 +54,7 @@ socket.on('user', users => {
 
 //listening for a message from the server
 socket.on('message', (msg) => {
-    console.log(msg.countries);
+    // console.log(msg.countries);
     outPut(msg);
 
     //scroll down the message list
@@ -153,7 +153,8 @@ function outPutUsername(users) {
 
 //function to display messages
 function outPut(msg) {
-
+    console.log("------------")
+    console.log(msg)
     //creating the div
     const div = document.createElement('div');
     div.classList.add('message');
@@ -168,29 +169,51 @@ function outPut(msg) {
     p.innerText = msg.username + ' ' + msg.time;
     div.appendChild(p);
 
-    //creating another paragraph to put inside
-    //the text of the message
-    const paraText = document.createElement('p');
-    paraText.style = "color: white;";
-    paraText.classList.add('text');
-    paraText.innerText = msg.text;
-    div.appendChild(paraText);
+    // TODO handle if the msg has media
+    if ("media" in msg) {
+        console.log("media message")
+        addGIFmessage(msg.media)
+    } else {
+        console.log("normal message")
+        //creating another paragraph to put inside
+        //the text of the message
+        const paraText = document.createElement('p');
+        paraText.style = "color: white;";
+        paraText.classList.add('text');
+        paraText.innerText = msg.text;
+        div.appendChild(paraText);
 
-    //appending countries links
-    msg.countries.forEach(country => {
-        let link = document.createElement('a');
-        link.innerText = country;
-        link.href = country;
-        link.style = "color: white;";
-        div.appendChild(link);
+        //appending countries links
+        msg.countries.forEach(country => {
+            let link = document.createElement('a');
+            link.innerText = country;
+            link.href = country;
+            link.style = "color: white;";
+            div.appendChild(link);
+            const br = document.createElement('br');
+            div.appendChild(br);
+        })
+
+        document.querySelector('.messages').appendChild(div);
         const br = document.createElement('br');
-        div.appendChild(br);
-    })
+        document.querySelector('.messages').appendChild(br);
+    }
+}
 
-    document.querySelector('.messages').appendChild(div);
+function addGIFmessage(media) {
+    var gifDivCard = document.createElement('div');
+    var gifImg = document.createElement('img');
+
+    gifDivCard.className = 'card'
+    gifImg.className = 'card-img-top'
+    gifDivCard.style = "width: 10rem;"
+    gifImg.src = media
+
+    gifDivCard.appendChild(gifImg);
+
+    document.querySelector('.messages').appendChild(gifDivCard);
     const br = document.createElement('br');
     document.querySelector('.messages').appendChild(br);
-
 }
 
 function displayFiles(bin) {
@@ -296,11 +319,25 @@ function addGIFcard(url) {
 
     gifImg.src = url
 
+    // TODO add onclick=sendMediaMsg
+    // gifImg.addEventListener("click", sendMediaMsg(url))
+    gifImg.onclick = function() {
+        console.log("Sending media")
+        const msg = { username: userP.username, media: url, time: '' };
+        socket.emit('chatMessage', msg);
+    }
+
     // console.log("Creating one with url " + url)
 
     gifDivRow.appendChild(gifDivCol);
     gifDivCol.appendChild(gifDivCard);
     gifDivCard.appendChild(gifImg);
+}
+
+function sendMediaMsg(url) {
+    console.log("Sending media")
+    const msg = { username: userP.username, media: url, time: '' };
+    socket.emit('chatMessage', msg);
 }
 
 function prevPage() {
