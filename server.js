@@ -125,7 +125,7 @@ io.on('connection', socket => { //socket is a parameter
         room: "room"
         /*image: user.image;*/
     };
-    socket.on('username', username =>{
+    socket.on('username', username => {
         usernameFromLogin = username;
         console.log(username);
         user.username = username;
@@ -296,11 +296,10 @@ io.on('connection', socket => { //socket is a parameter
         msg.time = moment().format('h:mm a');
 
         //qui voglio salvare il messaggio nel database
-        // TODO handle media
         console.log(msg)
         if ("media" in msg) {
             console.log("Media thing")
-            const msgSavedInDb = new messagesFromDb({ username: msg.username, media: msg.media, time: msg.time, room: user.room});
+            const msgSavedInDb = new messagesFromDb({ username: msg.username, media: msg.media, time: msg.time, room: user.room });
             msgSavedInDb.save().then(() => {
                 io.to(user.room).emit('message', msg);
             })

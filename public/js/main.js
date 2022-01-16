@@ -46,7 +46,7 @@ socket.on('userProperties', user => {
     userP.id = user.id;
     userP.room = user.room;
     userP.image = user.image;
-    console.log(user );
+    console.log(user);
     console.log(userP);
 })
 
@@ -173,12 +173,9 @@ function outPut(msg) {
     p.innerText = msg.username + ' ' + msg.time;
     div.appendChild(p);
 
-    // TODO handle if the msg has media
     if ("media" in msg) {
-        console.log("media message")
         addGIFmessage(msg.media)
     } else {
-        console.log("normal message")
         //creating another paragraph to put inside
         //the text of the message
         const paraText = document.createElement('p');
@@ -240,28 +237,17 @@ function displayFiles(bin) {
 async function showMenuGIF() {
     var x = document.getElementById("GIFmenu");
 
+    var messagesBoard = document.getElementById("messagesBoard");
+
+
     if (x.style.display === "none") {
         x.style.display = "block";
+        messagesBoard.className = 'messages h-25';
 
         getMenuInformation()
-        // console.log(menuImages)
-
-        // menuImages.then(() => {
-        //     for (const gif_name of menuImages) {
-        //         console.log(gif);
-        //         addGIFcard(gif_name)
-        //     }
-        // })
-
-        // getMenuInformation().then(menuImages => {
-        //     for (const gif_name of menuImages) {
-        //         console.log(gif);
-        //         addGIFcard(gif_name)
-        //     }
-        // });
-
     } else {
         x.style.display = "none";
+        messagesBoard.className = 'messages';
     }
 }
 
@@ -289,9 +275,7 @@ async function getMenuInformation() {
 
                     // if we reach empty page then there is nothing more to show
                     if (data.length == 0) {
-                        console.log("PO ES CERO")
                         maxNumPage = gifPage
-                        console.log(maxNumPage)
                         var btnNext = document.getElementById("btnNext");
                         if (gifPage == maxNumPage) {
                             btnNext.style.display = "none";
@@ -323,15 +307,12 @@ function addGIFcard(url) {
 
     gifImg.src = url
 
-    // TODO add onclick=sendMediaMsg
     // gifImg.addEventListener("click", sendMediaMsg(url))
-    gifImg.onclick = function() {
+    gifImg.onclick = function () {
         console.log("Sending media")
         const msg = { username: userP.username, media: url, time: '' };
         socket.emit('chatMessage', msg);
     }
-
-    // console.log("Creating one with url " + url)
 
     gifDivRow.appendChild(gifDivCol);
     gifDivCol.appendChild(gifDivCard);
@@ -371,7 +352,6 @@ function nextPage() {
 multimedia.addEventListener('change', (e) => {
     const file = multimedia.files[0];
 
-    console.log(file);
     let bin = {
         username: userP.username,
         binary: '',
