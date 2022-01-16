@@ -8,6 +8,7 @@ const multimedia = document.getElementById('multimedia');
 
 let gifPage = 0
 let maxNumPage = null
+const user = sessionStorage.getItem('user');
 
 const socket = io({
     'reconnection': true,
@@ -19,6 +20,8 @@ const socket = io({
 let userP = { username: '', id: '', room: '' };
 let userAfterCrash = { username: '', id: '', room: '' };
 let isConnected = false;
+
+socket.emit('username', user);
 
 
 socket.on('connect', function () {
@@ -43,7 +46,8 @@ socket.on('userProperties', user => {
     userP.id = user.id;
     userP.room = user.room;
     userP.image = user.image;
-    console.log(userP.room);
+    console.log(user );
+    console.log(userP);
 })
 
 //receiving the update list of online users
