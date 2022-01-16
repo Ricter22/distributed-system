@@ -1,10 +1,17 @@
 version: '3'
 services:
   node:
-    # image: melo:1.1
+    #image: melo:1.1
     build: .
     ports:
       - 3000:3000
+    networks:
+      - chat
+
+  auth:
+    build: AuthService/.
+    ports:
+      - 8080:8080
     networks:
       - chat
     

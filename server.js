@@ -42,8 +42,6 @@ app.use(express.json());
 const { users, newUserList, removedUserList, isInList } = require('./utils/users.js');
 const { Parsing } = require('./utils/mexParsing.js');
 
-let usernameFromLogin = '';
-
 app.get('/', function (request, response) {
     response.sendFile(path.join(__dirname + '/public/login.html'));
 });
@@ -59,12 +57,12 @@ const upload = multer({
     storage: Storage
 }).single('file');
 
-app.post('/register', upload, function (request, response) {
+/*app.post('/register', upload, function (request, response) {
     let username = request.body.username;
     let password = request.body.psw;
     let image = request.body.file;
 
-    userFromDb.findOne({ 'username': username/*, 'password':password*/ }, function (err, result) {
+    userFromDb.findOne({ 'username': username }, function (err, result) {
         if (err) { console.log("Error with the database"); };
 
         if (result != null) {
@@ -76,9 +74,9 @@ app.post('/register', upload, function (request, response) {
             response.redirect('login.html');
         }
     })
-});
+});*/
 
-app.post('/auth', function (request, response) {
+/*app.post('/auth', function (request, response) {
     let username = request.body.username;
     let password = request.body.password;
     let flag = false;
@@ -112,18 +110,35 @@ app.post('/auth', function (request, response) {
             });
         }
     })
-});
+});*/
 
 
 // Run when client connects
 io.on('connection', socket => { //socket is a parameter    
 
-    const user = {
-        username: usernameFromLogin,
+    let usernameFromLogin = undefined;
+
+
+    let user = {
+        username: "",
         id: socket.id,
         room: "room"
         /*image: user.image;*/
     };
+    socket.on('username', username =>{
+        usernameFromLogin = username;
+        console.log(username);
+        user.username = username;
+        console.log(user)
+
+        socket.emit('userProperties', user);
+
+        //adding the new user to the list 
+        //and emitting the updated list to client
+        newUserList(user);
+        io.emit('user', users);
+    })
+
 
     socket.on('userConnected', userConnected => {
         user.username = userConnected.username;
@@ -132,8 +147,6 @@ io.on('connection', socket => { //socket is a parameter
         /*newUserList(user);
         io.emit('user', users);*/
     })
-
-    socket.emit('userProperties', user);
 
     //joining the global room
     socket.join(user.room);
@@ -145,10 +158,7 @@ io.on('connection', socket => { //socket is a parameter
         socket.emit('oldMessages', result);
     })
 
-    //adding the new user to the list 
-    //and emitting the updated list to client
-    newUserList(user);
-    io.emit('user', users);
+
 
     //Welcome current user
     socket.emit('message', msg = {
